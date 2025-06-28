@@ -8,4 +8,9 @@
 
 body {
   background-color: var(--background);
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.shine {
+  box-shadow: 0px 1px 10px 1px rgba(165, 217, 119, 75%);
 }
