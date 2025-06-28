@@ -5,13 +5,31 @@ import Image from "next/image";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
+});
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [formErrors, setFormErrors] = useState("");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const validate = loginSchema.safeParse({ email, password });
+
+    if (!validate.success) {
+      setFormErrors(validate.error.errors.map((err) => err.message).join("; "));
+
+      return;
+    }
+    setFormErrors("");
+
     console.log("[EMAIL]", email);
     console.log("[PASSWORD]", password);
   };
@@ -19,7 +37,7 @@ export default function Login() {
   return (
     <div className="bg-geometric">
       <div className="overlay flex-col flex items-center justify-center">
-        <main className="w-1/3 min-w-60">
+        <main className="w-2/5 min-w-60">
           <Image
             src="/logo.png"
             width={500}
@@ -60,6 +78,9 @@ export default function Login() {
             <p id="passwordDesc" className="text-xs text-neutral text-center">
               Sua senha no primeiro acesso será sua data de aniversário neste
               formato DDMMYYYY.
+            </p>
+            <p className="text-xs font-extrabold text-secondary-150">
+              {formErrors}
             </p>
             <Button type="submit">ENTRAR</Button>
           </form>
