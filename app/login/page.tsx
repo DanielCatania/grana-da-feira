@@ -24,7 +24,6 @@ export default function Login() {
 
       return;
     }
-    setFormErrors("");
 
     const response = await (
       await fetch(`${defaultUrl()}/api/login`, {
@@ -39,7 +38,15 @@ export default function Login() {
       })
     ).json();
 
-    console.log("Response:", response);
+    if (response.error) {
+      if (typeof response.error === "string") setFormErrors(response.error);
+      else setFormErrors(response.error.map((err: string) => err).join("; "));
+      return;
+    }
+
+    setFormErrors("");
+    // Temporary
+    alert("Login feito com sucesso!");
   };
 
   return (

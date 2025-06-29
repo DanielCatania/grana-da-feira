@@ -1,14 +1,16 @@
-// import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import bcrypt from "bcrypt";
+import { IUser } from "@/type/user";
 import { loginSchema } from "@/validation/loginSchema";
 
 export async function POST(request: Request) {
-  // const supabase = await createClient();
+  const supabase = await createClient();
 
   const { email, password } = await request.json();
 
   if (!email || !password) {
     return new Response(
-      JSON.stringify({ error: "Email and password are required." }),
+      JSON.stringify({ error: "Email e senha são requeridos." }),
       {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -31,10 +33,41 @@ export async function POST(request: Request) {
     );
   }
 
-  // connection with database...
+  const { data, error } = await supabase
+    .from("User")
+    .select("*")
+    .eq("email", email);
 
-  return new Response(JSON.stringify({ message: "Login successful", email }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+  if (error)
+    return new Response(JSON.stringify({ error }), {
+      status: 500,
+    });
+
+  if (data === null || data.length === 0)
+    return new Response(JSON.stringify({ error: "Usuário não encontrado." }), {
+      status: 404,
+    });
+
+  const user = data[0] as IUser;
+
+  const passwordIsCorrect = await bcrypt.compare(
+    password + user.name,
+    user.password
+  );
+
+  if (!passwordIsCorrect)
+    return new Response(
+      JSON.stringify({ error: "Senha ou email incorretos." }),
+      {
+        status: 401,
+      }
+    );
+
+  return new Response(
+    JSON.stringify({ passwordDefault: user.passworddefault }),
+    {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 }
