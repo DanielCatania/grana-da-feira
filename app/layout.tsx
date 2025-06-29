@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+import defaultUrl from "@/utils/defaultUrl";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(defaultUrl),
+  metadataBase: new URL(defaultUrl()),
   title: "Grana Da Feira",
   description: "O seu dinheiro virtual para a feira cultural.",
 };

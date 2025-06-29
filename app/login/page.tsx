@@ -5,12 +5,8 @@ import Image from "next/image";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.string().email("E-mail inválido"),
-  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
-});
+import { loginSchema } from "@/validation/loginSchema";
+import defaultUrl from "@/utils/defaultUrl";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,7 +14,7 @@ export default function Login() {
 
   const [formErrors, setFormErrors] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const validate = loginSchema.safeParse({ email, password });
@@ -30,8 +26,20 @@ export default function Login() {
     }
     setFormErrors("");
 
-    console.log("[EMAIL]", email);
-    console.log("[PASSWORD]", password);
+    const response = await (
+      await fetch(`${defaultUrl()}/api/login`, {
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
+    console.log("Response:", response);
   };
 
   return (
