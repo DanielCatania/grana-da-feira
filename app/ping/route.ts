@@ -6,10 +6,10 @@ export async function GET() {
   const { data, error } = await supabase
     .from("User")
     .select("*")
-    .eq("id", "b3a81a02-2558-4e0b-81bb-5afef6772b28");
+    .eq("email", "catania@escola.com");
 
-  if (process.env.NODE_ENV !== "production") console.log(data);
-  console.error(error);
+  if (process.env.NODE_ENV !== "production" && data !== null)
+    console.log(data[0]);
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
