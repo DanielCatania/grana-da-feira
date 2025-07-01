@@ -6,7 +6,6 @@ import Image from "next/image";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { loginSchema } from "@/validation/loginSchema";
-import defaultUrl from "@/utils/defaultUrl";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
@@ -29,7 +28,7 @@ export default function Login() {
     }
 
     const response = await (
-      await fetch(`${defaultUrl()}/api/login`, {
+      await fetch(`/api/login`, {
         body: JSON.stringify({
           email,
           password,
