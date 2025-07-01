@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import bcrypt from "bcrypt";
 import { IUser } from "@/type/user";
 import { loginSchema } from "@/validation/loginSchema";
-import cookie from "cookie";
+import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
 
 export async function POST(request: Request) {
@@ -57,22 +57,19 @@ export async function POST(request: Request) {
 
   const token = jwt.sign({ id: user.id, name: user.name }, { expiresIn: "2d" });
 
+  const cookieStore = await cookies();
+  cookieStore.set("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 2, // 2 dias
+  });
+
   return new Response(
     JSON.stringify({
       message: "Login realizado com sucesso.",
       passwordDefault: user.passworddefault,
-    }),
-    {
-      headers: {
-        "Set-Cookie": cookie.serialize("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
-          path: "/",
-          maxAge: 60 * 60 * 24 * 2, // 2 days
-        }),
-        "Content-Type": "application/json",
-      },
-    }
+    })
   );
 }
