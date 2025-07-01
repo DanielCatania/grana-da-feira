@@ -2,21 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import bcrypt from "bcrypt";
 import { IUser } from "@/type/user";
 import { loginSchema } from "@/validation/loginSchema";
+import cookie from "cookie";
+import jwt from "@/lib/jwt";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
 
   const { email, password } = await request.json();
-
-  if (!email || !password) {
-    return new Response(
-      JSON.stringify({ error: "Email e senha são requeridos." }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
 
   const validation = loginSchema.safeParse({ email, password });
 
@@ -39,7 +31,7 @@ export async function POST(request: Request) {
     .eq("email", email);
 
   if (error)
-    return new Response(JSON.stringify({ error }), {
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
 
@@ -63,11 +55,24 @@ export async function POST(request: Request) {
       }
     );
 
+  const token = jwt.sign({ id: user.id, name: user.name }, { expiresIn: "2d" });
+
   return new Response(
-    JSON.stringify({ passwordDefault: user.passworddefault }),
+    JSON.stringify({
+      message: "Login realizado com sucesso.",
+      passwordDefault: user.passworddefault,
+    }),
     {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Set-Cookie": cookie.serialize("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path: "/",
+          maxAge: 60 * 60 * 24 * 2, // 2 days
+        }),
+        "Content-Type": "application/json",
+      },
     }
   );
 }

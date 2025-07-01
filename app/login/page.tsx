@@ -7,8 +7,11 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { loginSchema } from "@/validation/loginSchema";
 import defaultUrl from "@/utils/defaultUrl";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,6 +38,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       })
     ).json();
 
@@ -45,8 +49,9 @@ export default function Login() {
     }
 
     setFormErrors("");
-    // Temporary
-    alert("Login feito com sucesso!");
+
+    if (response.passwordDefault) return router.push("/change-password");
+    router.push("/");
   };
 
   return (
