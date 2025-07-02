@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "@/lib/jwt";
 import { IUserToken } from "@/type/user";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 export default async function ChangePassword() {
   const cookiesList = await cookies();
@@ -12,9 +13,7 @@ export default async function ChangePassword() {
 
     const decoded = jwt.verify(token) as IUserToken;
 
-    console.log(decoded.birthdate);
-
-    return <div>Mudar Senha</div>;
+    return <ChangePasswordForm passwordDefault={decoded.birthdate} />;
   } catch (error) {
     const msg = (error as Error).message;
     if (msg === "No Token") redirect("/login");
