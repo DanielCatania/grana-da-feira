@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
-import Link from "next/link";
 import { IUser, IUserToken } from "@/type/user";
 import { redirect } from "next/navigation";
 import Image from "next/image";
@@ -27,10 +26,20 @@ export default async function Dashboard() {
 
   const user = data[0] as IUser;
 
+  const { data: transactions, error: transactionError } = await supabase
+    .from("Transaction")
+    .select("*")
+    .eq("userid", user.id);
+
+  if (transactionError) {
+    console.error("Error fetching trasactions data:", error);
+    redirect("/login");
+  }
+
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
       <main className="w-2/5 min-w-60">
-        <section className="flex justify-between items-center text-xs">
+        <section className="flex justify-between items-center text-xl">
           <Image
             src="/Icon.png"
             alt="Ícone de notas de dinheiro voando."
@@ -42,9 +51,6 @@ export default async function Dashboard() {
             Olá,{" "}
             <span className="text-primary-100 capitalize">{user.name}</span>
           </p>
-          <Link href="/change-password" className="text-primary-100 underline">
-            Trocar senha
-          </Link>
         </section>
 
         <Box title="Saldo">
@@ -52,6 +58,39 @@ export default async function Dashboard() {
             ${user.balance}{" "}
             <span className="text-2xl text-primary-150">Cults</span>
           </h2>
+        </Box>
+        <Box title="Extrato">
+          <ul className="overflow-y-scroll max-h-60">
+            {transactions.map((transaction) => {
+              const isDonation = transaction.type === "DONATION";
+
+              const formatDate = (dateString: string) => {
+                const date = new Date(dateString);
+                const day = String(date.getDate()).padStart(2, "0");
+                const mounth = String(date.getMonth() + 1).padStart(2, "0");
+                const year = date.getFullYear();
+
+                return `${day}/${mounth}/${year}`;
+              };
+              return (
+                <li
+                  key={transaction.id}
+                  className={
+                    isDonation ? "text-primary-100" : "text-secondary-150"
+                  }
+                >
+                  <h3 className="font-extrabold">
+                    {isDonation ? "💸 Doação" : "🛍️ Compra"}:
+                  </h3>
+                  <p>
+                    {isDonation ? "+" : "-"}
+                    {transaction.amount} Cults - {transaction.description} em{" "}
+                    {formatDate(transaction.date)}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
         </Box>
       </main>
     </div>
