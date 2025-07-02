@@ -20,6 +20,10 @@ export default async function Dashboard() {
     .select("*")
     .eq("id", decoded.id);
 
+  if (!data || data.length === 0) {
+    redirect("/login");
+  }
+
   if (error) {
     console.error("Error fetching user data:", error);
     redirect("/login");
@@ -33,7 +37,7 @@ export default async function Dashboard() {
     .eq("userid", user.id);
 
   if (transactionError) {
-    console.error("Error fetching trasactions data:", error);
+    console.error("Error fetching trasactions data:", transactionError);
     redirect("/login");
   }
 

@@ -4,7 +4,7 @@ import { IUser } from "@/type/user";
 import { loginSchema } from "@/validation/loginSchema";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
-import { formatDateToPassword } from "@/utils/password";
+import { formatDateToPassword, hashPassword } from "@/utils/password";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -23,6 +23,38 @@ export async function POST(request: Request) {
       {
         status: 400,
       }
+    );
+  }
+
+  if (
+    email === process.env.ADMIN_EMAIL &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
+    const token = jwt.sign(
+      {
+        id: "admin",
+        name: "Administrador Principal",
+        adminAccess: await hashPassword(
+          process.env.ADMIN_EMAIL!,
+          process.env.ADMIN_PASSWORD!
+        ),
+      },
+      { expiresIn: "2d" }
+    );
+
+    const cookieStore = await cookies();
+    cookieStore.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 2, // 2 dias
+    });
+
+    return new Response(
+      JSON.stringify({
+        message: "Login de admin realizado com sucesso.",
+      })
     );
   }
 

@@ -15,4 +15,5 @@ export interface IUserToken {
   iat: number;
   passwordDefault: boolean;
   birthdate: string;
+  adminAccess?: string;
 }

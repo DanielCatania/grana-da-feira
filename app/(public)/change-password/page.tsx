@@ -13,6 +13,10 @@ export default async function ChangePassword() {
 
     const decoded = jwt.verify(token) as IUserToken;
 
+    if (decoded.adminAccess) {
+      redirect("/admin");
+    }
+
     return <ChangePasswordForm passwordDefault={decoded.birthdate} />;
   } catch (error) {
     const msg = (error as Error).message;

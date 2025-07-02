@@ -18,11 +18,14 @@ export default async function ProtectedLayout({
 
     if (decoded.passwordDefault) throw new Error("Password Default");
 
+    if (decoded.adminAccess) throw new Error("Admin");
+
     return <>{children}</>;
   } catch (error) {
     const msg = (error as Error).message;
     if (msg === "No Token") redirect("/login");
     if (msg === "Password Default") redirect("/change-password");
+    if (msg === "Admin") redirect("/admin");
     throw error;
   }
 }
