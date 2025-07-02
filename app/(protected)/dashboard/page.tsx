@@ -5,6 +5,7 @@ import { IUser, IUserToken } from "@/type/user";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Box from "@/components/Box";
+import Button from "@/components/Button";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -38,8 +39,8 @@ export default async function Dashboard() {
 
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
-      <main className="w-2/5 min-w-60">
-        <section className="flex justify-between items-center text-xl">
+      <main className="w-2/5 min-w-64 flex flex-col items-center">
+        <section className="flex justify-between items-center text-xl w-full">
           <Image
             src="/Icon.png"
             alt="Ícone de notas de dinheiro voando."
@@ -92,6 +93,8 @@ export default async function Dashboard() {
             })}
           </ul>
         </Box>
+
+        <Button>Gerar ID de Compra</Button>
       </main>
     </div>
   );
