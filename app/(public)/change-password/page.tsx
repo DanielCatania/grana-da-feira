@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "@/lib/jwt";
-import { IUserToken } from "@/type/user";
+import { IUserToken } from "@/types";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 export default async function ChangePassword() {

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "@/lib/jwt";
 import bcrypt from "bcrypt";
+import { DecodedAdminToken } from "@/types";
 
 export default async function ProtectedLayout({
   children,
@@ -14,15 +15,10 @@ export default async function ProtectedLayout({
   try {
     if (!token) throw new Error("No Token");
 
-    interface DecodedToken {
-      adminAccess: string;
-      [key: string]: unknown;
-    }
-    const decoded = jwt.verify(token!) as DecodedToken;
+    const decoded = jwt.verify(token!) as DecodedAdminToken;
 
     if (!decoded.adminAccess) throw new Error("No Admin");
 
-    console.log(process.env.ADMIN_EMAIL! + process.env.ADMIN_PASSWORD!);
     const isValidAdmin = await bcrypt.compare(
       process.env.ADMIN_EMAIL! + process.env.ADMIN_PASSWORD!,
       decoded.adminAccess

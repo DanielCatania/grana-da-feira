@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { IUser, IUserToken } from "@/type/user";
+import { IUser, IUserToken } from "@/types";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
 import { formatDateToPassword, hashPassword } from "@/utils/password";

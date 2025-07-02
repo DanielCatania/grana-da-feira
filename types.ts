@@ -17,3 +17,8 @@ export interface IUserToken {
   birthdate: string;
   adminAccess?: string;
 }
+
+export interface DecodedAdminToken {
+  adminAccess: string;
+  [key: string]: unknown;
+}

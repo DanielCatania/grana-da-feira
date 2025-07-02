@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
-import { IUser, IUserToken } from "@/type/user";
+import { IUser, IUserToken } from "@/types";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Box from "@/components/Box";

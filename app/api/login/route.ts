@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import bcrypt from "bcrypt";
-import { IUser } from "@/type/user";
+import { IUser } from "@/types";
 import { loginSchema } from "@/validation/loginSchema";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
