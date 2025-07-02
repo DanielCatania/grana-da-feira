@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ChangePasswordFormProps {
@@ -10,10 +11,12 @@ interface ChangePasswordFormProps {
 export default function ChangePasswordForm({
   passwordDefault,
 }: ChangePasswordFormProps) {
+  const router = useRouter();
+
   const [formErrors, setFormErrors] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password.length < 8)
@@ -22,9 +25,24 @@ export default function ChangePasswordForm({
     if (password === passwordDefault)
       return setFormErrors("A senha deve ser diferente da senha padrão");
 
+    const response = await (
+      await fetch(`/api/change-password`, {
+        body: JSON.stringify({
+          password,
+        }),
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+    ).json();
+
+    if (response.error) return setFormErrors(response.error);
+
     setFormErrors("");
-    // temporary
-    alert("Senha trocada!");
+
+    router.push("/");
   };
 
   return (
