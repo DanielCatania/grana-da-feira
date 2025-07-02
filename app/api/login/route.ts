@@ -55,7 +55,10 @@ export async function POST(request: Request) {
       }
     );
 
-  const token = jwt.sign({ id: user.id, name: user.name }, { expiresIn: "2d" });
+  const token = jwt.sign(
+    { id: user.id, name: user.name, passwordDefault: user.passworddefault },
+    { expiresIn: "2d" }
+  );
 
   const cookieStore = await cookies();
   cookieStore.set("token", token, {
