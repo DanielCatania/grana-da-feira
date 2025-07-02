@@ -3,7 +3,11 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useState } from "react";
 
-export default function UserSearch() {
+interface UserSearchProps {
+  setSelectedUser: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export default function UserSearch({ setSelectedUser }: UserSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<{ name: string }[]>([]);
 
@@ -34,7 +38,10 @@ export default function UserSearch() {
   }
 
   return (
-    <form onSubmit={handleSearch}>
+    <form
+      onSubmit={handleSearch}
+      className="w-full flex flex-col items-center gap-4"
+    >
       <Input
         type="text"
         placeholder="Buscar aluno por nome"
@@ -42,9 +49,15 @@ export default function UserSearch() {
       />
       <Button type="submit">Buscar</Button>
 
-      <ul>
+      <ul className="grid grid-cols-1 gap-2 w-full max-h-40 overflow-y-scroll">
         {results.map((user, i) => (
-          <li key={i}>{user.name}</li>
+          <li
+            key={i}
+            className="bg-primary-150 shine p-1 rounded-lg cursor-pointer"
+            onClick={() => setSelectedUser(user.name)}
+          >
+            {user.name}
+          </li>
         ))}
       </ul>
     </form>
