@@ -49,7 +49,6 @@ export default function Login() {
 
     setFormErrors("");
 
-    if (response.passwordDefault) return router.push("/change-password");
     router.push("/");
   };
 

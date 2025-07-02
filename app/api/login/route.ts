@@ -4,6 +4,7 @@ import { IUser } from "@/type/user";
 import { loginSchema } from "@/validation/loginSchema";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
+import { formatDateToPassword } from "@/utils/password";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -56,7 +57,12 @@ export async function POST(request: Request) {
     );
 
   const token = jwt.sign(
-    { id: user.id, name: user.name, passwordDefault: user.passworddefault },
+    {
+      id: user.id,
+      name: user.name,
+      passwordDefault: user.passworddefault,
+      birthdate: formatDateToPassword(user.birthdate),
+    },
     { expiresIn: "2d" }
   );
 
@@ -72,7 +78,6 @@ export async function POST(request: Request) {
   return new Response(
     JSON.stringify({
       message: "Login realizado com sucesso.",
-      passwordDefault: user.passworddefault,
     })
   );
 }
