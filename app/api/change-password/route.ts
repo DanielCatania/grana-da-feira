@@ -3,6 +3,7 @@ import { IUser, IUserToken } from "@/type/user";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
 import { formatDateToPassword, hashPassword } from "@/utils/password";
+import bcrypt from "bcrypt";
 
 export async function PATCH(request: Request) {
   const supabase = await createClient();
@@ -40,6 +41,14 @@ export async function PATCH(request: Request) {
       JSON.stringify({
         error: "A nova senha não pode ser igual a senha padrão.",
       }),
+      { status: 400 }
+    );
+
+  const isTheSame = await bcrypt.compare(password + user.name, user.password);
+
+  if (isTheSame)
+    return new Response(
+      JSON.stringify({ error: "A nova senha não pode ser igual a atual." }),
       { status: 400 }
     );
 
