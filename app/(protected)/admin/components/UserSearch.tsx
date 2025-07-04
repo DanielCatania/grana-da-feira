@@ -2,17 +2,16 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useState } from "react";
+import { User } from "./page";
 
 interface UserSearchProps {
-  setSelectedUser: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 export default function UserSearch({ setSelectedUser }: UserSearchProps) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
-  const [results, setResults] = useState<{ name: string }[] | "initial">(
-    "initial"
-  );
+  const [results, setResults] = useState<User[] | "initial">("initial");
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -70,11 +69,11 @@ export default function UserSearch({ setSelectedUser }: UserSearchProps) {
         {results === "initial" ? (
           ""
         ) : results.length > 0 ? (
-          results.map((user, i) => (
+          results.map((user) => (
             <li
-              key={i}
+              key={user.id}
               className="bg-primary-150 shine p-1 rounded-lg cursor-pointer"
-              onClick={() => setSelectedUser(user.name)}
+              onClick={() => setSelectedUser(user)}
             >
               {user.name}
             </li>

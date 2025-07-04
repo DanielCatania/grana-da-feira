@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("User")
-    .select("name")
+    .select("name, id")
     .ilike("name", `%${query}%`);
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
