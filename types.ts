@@ -8,6 +8,11 @@ export interface IUser {
   balance: number;
 }
 
+export interface IUserIdentification {
+  name: string;
+  id: string;
+}
+
 export interface IUserToken {
   id: string;
   name: string;

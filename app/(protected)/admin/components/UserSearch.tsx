@@ -2,16 +2,20 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useState } from "react";
-import { User } from "./page";
+import { IUserIdentification } from "@/types";
 
 interface UserSearchProps {
-  setSelectedUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setSelectedUser: React.Dispatch<
+    React.SetStateAction<IUserIdentification | null>
+  >;
 }
 
 export default function UserSearch({ setSelectedUser }: UserSearchProps) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
-  const [results, setResults] = useState<User[] | "initial">("initial");
+  const [results, setResults] = useState<IUserIdentification[] | "initial">(
+    "initial"
+  );
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();

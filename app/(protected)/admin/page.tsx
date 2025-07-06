@@ -4,14 +4,12 @@ import UserSearch from "./components/UserSearch";
 import { useState } from "react";
 import DonationForm from "./components/DonationForm";
 import { capitalize } from "@/utils/textFormatter";
-
-export type User = {
-  name: string;
-  id: string;
-};
+import { IUserIdentification } from "@/types";
 
 export default function Admin() {
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IUserIdentification | null>(
+    null
+  );
 
   const [credits, setCredits] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
