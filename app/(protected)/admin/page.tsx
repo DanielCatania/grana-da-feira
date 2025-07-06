@@ -3,6 +3,7 @@ import Box from "@/components/Box";
 import UserSearch from "./components/UserSearch";
 import { useState } from "react";
 import DonationForm from "./components/DonationForm";
+import { capitalize } from "@/utils/textFormatter";
 
 export type User = {
   name: string;
@@ -18,9 +19,30 @@ export default function Admin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    alert(
-      `Doação de ${description} registrada para ${selectedUser?.name} com ${credits} cults.`
-    );
+    if (!selectedUser || credits <= 0 || !description) {
+      alert("Por favor, preencha todos os campos corretamente.");
+      return;
+    }
+
+    const response = await fetch("/api/admin/donation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: selectedUser.id,
+        credits,
+        description: capitalize(description),
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.message || data.error) {
+      alert(`Erro ao registrar doação: ${data.error}`);
+      return;
+    }
+
+    alert(data.message);
 
     setSelectedUser(null);
     setCredits(0);

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import Box from "@/components/Box";
 import Button from "@/components/Button";
+import { capitalize } from "@/utils/textFormatter";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -48,8 +49,8 @@ export default async function Dashboard() {
           <Image
             src="/Icon.png"
             alt="Ícone de notas de dinheiro voando."
-            width={120}
-            height={120}
+            width={480}
+            height={480}
             className="w-1/5 min-w-16"
           />
           <p>
@@ -89,7 +90,8 @@ export default async function Dashboard() {
                   </h3>
                   <p>
                     {isDonation ? "+" : "-"}
-                    {transaction.amount} Cults - {transaction.description} em{" "}
+                    {transaction.amount} Cults -{" "}
+                    {capitalize(transaction.description)} em{" "}
                     {formatDate(transaction.date)}
                   </p>
                 </li>

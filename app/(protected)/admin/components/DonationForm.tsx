@@ -21,10 +21,10 @@ export default function DonationForm({
       className="bg-dark text-primary-100 flex items-center justify-center p-4 rounded mt-4 flex-wrap"
     >
       <label className="text-xl mb-2 w-2/3">
-        Descrição
+        Produto doado
         <Input
           type="text"
-          placeholder="Descrição da doação"
+          placeholder="Produto doado"
           state={{ value: description.value, set: description.set }}
         />
       </label>
