@@ -1,8 +1,11 @@
 import Box from "@/components/Box";
 import Button from "@/components/Button";
+import QRCodeGenerator from "@/components/QRCode/QRCodeGenerator";
 import Link from "next/link";
 
 export default function PurchaseIdPage() {
+  const id = "A8BH";
+
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
       <Link
@@ -28,8 +31,10 @@ export default function PurchaseIdPage() {
         </Box>
         <Box title="ID para Compra Única">
           <p className="text-primary-100 text-center font-extrabold text-5xl">
-            <span>A</span> <span>8</span> <span>B</span> <span>H</span>
+            <span>{id[0]}</span> <span>{id[1]}</span> <span>{id[2]}</span>{" "}
+            <span>{id[3]}</span>
           </p>
+          <QRCodeGenerator id={id} />
         </Box>
         <Button>Gerar Outro ID de Compra</Button>
       </main>

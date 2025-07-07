@@ -5,6 +5,9 @@ import { useState } from "react";
 import DonationForm from "./components/DonationForm";
 import { capitalize } from "@/utils/textFormatter";
 import { IUserIdentification } from "@/types";
+import QRCodeReader from "@/components/QRCode/QRCodeReader";
+import Link from "next/link";
+import Button from "@/components/Button";
 
 export default function Admin() {
   const [selectedUser, setSelectedUser] = useState<IUserIdentification | null>(
@@ -70,6 +73,11 @@ export default function Admin() {
             <UserSearch setSelectedUser={setSelectedUser} />
           </Box>
         )}
+        <Button>
+          <Link href="/admin/sales" className="block w-full h-full">
+            Iniciar Modo de Venda
+          </Link>
+        </Button>
       </main>
     </div>
   );
