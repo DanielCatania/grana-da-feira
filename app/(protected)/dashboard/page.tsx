@@ -7,6 +7,7 @@ import Image from "next/image";
 import Box from "@/components/Box";
 import Button from "@/components/Button";
 import { capitalize } from "@/utils/textFormatter";
+import Link from "next/link";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -100,7 +101,11 @@ export default async function Dashboard() {
           </ul>
         </Box>
 
-        <Button>Gerar ID de Compra</Button>
+        <Button>
+          <Link href="/dashboard/purchase-id" className="block w-full h-full">
+            Gerar ID de Compra
+          </Link>
+        </Button>
       </main>
     </div>
   );
