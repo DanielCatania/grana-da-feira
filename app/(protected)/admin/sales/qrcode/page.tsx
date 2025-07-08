@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function QRCodePage() {
   const router = useRouter();
   return (
-    <main>
+    <main className="h-screen w-screen">
       <Link
         href="/admin/sales"
         prefetch={false}

@@ -11,41 +11,35 @@ export default function QRCodeReader({
   const router = useRouter();
 
   useEffect(() => {
-    let scanner: Html5Qrcode;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      alert("Navegador sem suporte à câmera.");
+      router.push("/admin/sales");
+      return;
+    }
 
-    const startScanner = async () => {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        alert("Navegador sem suporte à câmera.");
-        router.push("/admin/sales");
-        return;
-      }
+    const scanner = new Html5Qrcode("reader");
 
-      try {
-        scanner = new Html5Qrcode("reader");
-        await scanner.start(
-          { facingMode: "environment" },
-          { fps: 5, qrbox: 150 },
-          (decodedText) => {
-            scanner.stop();
-            onRead(decodedText);
-          },
-          (error) => {
-            console.warn(`Erro no QR: ${error}`);
-          }
-        );
-      } catch (err) {
-        console.error("Erro ao iniciar scanner:", err);
-        alert("Erro ao acessar a câmera.");
-      }
+    const start = async () => {
+      await scanner.start(
+        { facingMode: "environment" },
+        {
+          fps: 5,
+          qrbox: 300,
+        },
+        (decodedText) => {
+          onRead(decodedText);
+          scanner
+            .stop()
+            .catch((err) => console.error("Error stopping scanner:", err));
+        },
+        (error) => {
+          console.warn(`Erro no QRcode: ${error}`);
+        }
+      );
     };
 
-    const timeout = setTimeout(startScanner, 300);
-
-    return () => {
-      clearTimeout(timeout);
-      if (scanner) scanner.stop().catch(() => {});
-    };
-  }, [onRead, router]);
+    start();
+  }, [router, onRead]);
 
   return (
     <div
