@@ -5,7 +5,6 @@ import { useState } from "react";
 import DonationForm from "./components/DonationForm";
 import { capitalize } from "@/utils/textFormatter";
 import { IUserIdentification } from "@/types";
-import QRCodeReader from "@/components/QRCode/QRCodeReader";
 import Link from "next/link";
 import Button from "@/components/Button";
 
@@ -52,7 +51,7 @@ export default function Admin() {
 
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
-      <main className="w-2/5 min-w-64 flex flex-col items-center">
+      <main className="w-2/5 min-w-72 flex flex-col items-center">
         <h2 className="text-4xl font-extrabold text-primary-150">Admin</h2>
         {selectedUser ? (
           <Box title={`Registrar doação para ${selectedUser.name}`}>

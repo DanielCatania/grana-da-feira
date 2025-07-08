@@ -47,5 +47,15 @@ export default function QRCodeReader({
     };
   }, [onRead, router]);
 
-  return <div id="reader" style={{ width: "300px", height: "300px" }} />;
+  return (
+    <div
+      id="reader"
+      style={{
+        width: "300px",
+        height: "300px",
+        display: "block",
+        margin: "calc(25% - 150px) auto",
+      }}
+    />
+  );
 }
