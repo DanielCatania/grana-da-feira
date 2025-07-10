@@ -11,6 +11,7 @@ interface SalesFormProps {
     value: number;
     set: React.Dispatch<React.SetStateAction<number>>;
   };
+  onSubmit: (e: React.FormEvent) => void;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -21,9 +22,13 @@ export default function SalesForm({
   children,
   descriptionState,
   amountState,
+  onSubmit,
 }: SalesFormProps) {
   return (
-    <form className="flex flex-col items-center gap-4 rounded-2xl bg-dark p-4">
+    <form
+      className="flex flex-col items-center gap-4 rounded-2xl bg-dark p-4"
+      onSubmit={onSubmit}
+    >
       <Label>
         Id de Compra:
         {children}
@@ -34,6 +39,7 @@ export default function SalesForm({
           type="text"
           placeholder="Digite o nome do produto"
           state={descriptionState}
+          required
         />
       </Label>
       <Label>
@@ -45,7 +51,7 @@ export default function SalesForm({
           state={amountState}
         />
       </Label>
-      <Button>Registrar Compra</Button>
+      <Button type="submit">Registrar Compra</Button>
     </form>
   );
 }
