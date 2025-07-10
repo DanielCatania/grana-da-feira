@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export default function QRCodeReader({
   onRead,
 }: {
-  onRead: (id: string) => void;
+  onRead: (id: string) => boolean;
 }) {
   const router = useRouter();
 
@@ -27,10 +27,11 @@ export default function QRCodeReader({
           qrbox: 300,
         },
         (decodedText) => {
-          onRead(decodedText);
-          scanner
-            .stop()
-            .catch((err) => console.error("Error stopping scanner:", err));
+          const success = onRead(decodedText);
+          if (success)
+            scanner
+              .stop()
+              .catch((err) => console.error("Error stopping scanner:", err));
         },
         (error) => {
           console.warn(`Erro no QRcode: ${error}`);

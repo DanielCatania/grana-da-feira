@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import SalesForm from "./components/SalesForm";
 import Box from "@/components/Box";
+import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
 
 export default function SalesMode() {
   const router = useRouter();
@@ -17,6 +18,17 @@ export default function SalesMode() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const validationId = purchaseIdSchema.safeParse(id);
+
+    if (!validationId.success) {
+      alert(
+        `Id de Compra Inválido:\n ${validationId.error.issues
+          .map((issue) => issue.message)
+          .join("\n ")}`
+      );
+      return setId("");
+    }
 
     alert(
       `Compra de ${description} no valor $${amount} cults com o ID de compra ${id}`
@@ -33,7 +45,6 @@ export default function SalesMode() {
     <main className="w-2/5 min-w-72 flex my-1/4 mx-auto flex-col items-center justify-evenly h-screen">
       <Link
         href="/admin"
-        prefetch={false}
         className="mt-4 bg-primary-100 bg-primary-200 text-white px-4 py-2 rounded absolute top-2 left-4 md:left-1/4"
       >
         Voltar
