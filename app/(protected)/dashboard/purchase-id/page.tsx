@@ -1,7 +1,10 @@
 import Box from "@/components/Box";
 import Button from "@/components/Button";
 import QRCodeGenerator from "@/components/QRCode/QRCodeGenerator";
+import { createClient } from "@/lib/supabase/server";
+import getUser from "@/utils/getUser";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const generatePurchaseId = () => {
   const chars = "ABCDEFGHIJKMLNOPQRSTUVWXYZ0123456789";
@@ -15,7 +18,40 @@ const generatePurchaseId = () => {
 };
 
 export default async function PurchaseIdPage() {
-  const id = generatePurchaseId();
+  let id: string;
+
+  const supabase = await createClient();
+
+  const user = await getUser();
+
+  const { data: currentId } = (await supabase
+    .from("PurchaseId")
+    .select("*")
+    .eq("userid", user.id)
+    .eq("used", false)
+    .single()) as { data: { value: string } | null };
+
+  if (currentId) id = currentId.value;
+  else {
+    const registerId = async (): Promise<string> => {
+      const id = generatePurchaseId();
+
+      const { error } = await supabase.from("PurchaseId").insert({
+        value: id,
+        userid: user.id,
+      });
+
+      if (error && error.code === "23505") return await registerId(); // 'duplicate key value violates unique constraint "PurchaseId_pkey"'
+
+      if (error) {
+        return redirect("/dashboard");
+      }
+
+      return id;
+    };
+
+    id = await registerId();
+  }
 
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
