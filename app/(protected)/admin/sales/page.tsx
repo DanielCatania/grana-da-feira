@@ -2,7 +2,7 @@
 import Input from "@/components/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import SalesForm from "./components/SalesForm";
 import Box from "@/components/Box";
 import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
@@ -11,14 +11,10 @@ export default function SalesMode() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const queryId = searchParams.get("id");
+  const [queryId, setQueryId] = useState(searchParams.get("id"));
   const [id, setId] = useState<string>(queryId || "");
-  const [description, setDescription] = useState<string>("");
-  const [amount, setAmount] = useState<number>(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const validateId = useCallback(() => {
     const validationId = purchaseIdSchema.safeParse(id);
 
     if (!validationId.success) {
@@ -27,7 +23,34 @@ export default function SalesMode() {
           .map((issue) => issue.message)
           .join("\n ")}`
       );
-      return setId("");
+      setId("");
+
+      return false;
+    }
+
+    return true;
+  }, [id]);
+
+  useEffect(() => {
+    if (queryId) {
+      const isValid = validateId();
+
+      if (!isValid) setQueryId(null);
+    }
+  }, [queryId, validateId]);
+
+  const [description, setDescription] = useState<string>("");
+  const [amount, setAmount] = useState<number>(0);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const isValid = validateId();
+
+    if (!isValid) {
+      setQueryId(null);
+
+      return;
     }
 
     alert(
@@ -42,7 +65,7 @@ export default function SalesMode() {
   };
 
   return (
-    <main className="w-2/5 min-w-72 flex my-1/4 mx-auto flex-col items-center justify-evenly h-screen">
+    <main className="w-2/5 min-w-72 flex mx-auto flex-col items-center justify-evenly h-screen">
       <Link
         href="/admin"
         className="mt-4 bg-primary-100 bg-primary-200 text-white px-4 py-2 rounded absolute top-2 left-4 md:left-1/4"
