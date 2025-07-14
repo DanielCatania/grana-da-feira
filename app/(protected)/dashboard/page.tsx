@@ -1,37 +1,19 @@
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
-import jwt from "@/lib/jwt";
-import { IUser, IUserToken } from "@/types";
 import { redirect } from "next/navigation";
+
 import Image from "next/image";
-import Box from "@/components/Box";
-import Button from "@/components/Button";
-import { capitalize } from "@/utils/textFormatter";
 import Link from "next/link";
 
+import Box from "@/components/Box";
+import Button from "@/components/Button";
+
+import { capitalize } from "@/utils/textFormatter";
+import getUser from "@/utils/getUser";
+
 export default async function Dashboard() {
+  const user = await getUser();
+
   const supabase = await createClient();
-
-  const cookiesList = await cookies();
-  const token = cookiesList.get("token")?.value;
-
-  const decoded = jwt.verify(token!) as IUserToken;
-
-  const { data, error } = await supabase
-    .from("User")
-    .select("*")
-    .eq("id", decoded.id);
-
-  if (!data || data.length === 0) {
-    redirect("/login");
-  }
-
-  if (error) {
-    console.error("Error fetching user data:", error);
-    redirect("/login");
-  }
-
-  const user = data[0] as IUser;
 
   const { data: transactions, error: transactionError } = await supabase
     .from("Transaction")
