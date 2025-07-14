@@ -3,8 +3,19 @@ import Button from "@/components/Button";
 import QRCodeGenerator from "@/components/QRCode/QRCodeGenerator";
 import Link from "next/link";
 
-export default function PurchaseIdPage() {
-  const id = "A8BH";
+const generatePurchaseId = () => {
+  const chars = "ABCDEFGHIJKMLNOPQRSTUVWXYZ0123456789";
+
+  let id = "";
+  for (let i = 0; i < 4; i++) {
+    id += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return id;
+};
+
+export default async function PurchaseIdPage() {
+  const id = generatePurchaseId();
 
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
