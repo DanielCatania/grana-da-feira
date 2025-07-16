@@ -1,5 +1,5 @@
 import Box from "@/components/Box";
-import Button from "@/components/Button";
+import RefreshButton from "@/components/Button/RefreshButton";
 import QRCodeGenerator from "@/components/QRCode/QRCodeGenerator";
 import { createClient } from "@/lib/supabase/server";
 import getUser from "@/utils/getUser";
@@ -83,7 +83,7 @@ export default async function PurchaseIdPage() {
           </p>
           <QRCodeGenerator id={id} />
         </Box>
-        <Button>Gerar Outro ID de Compra</Button>
+        <RefreshButton>Gerar Outro ID de Compra</RefreshButton>
       </main>
     </div>
   );
