@@ -1,6 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
+import checkIsAdmin from "@/utils/isAdmin";
 
 export async function POST(request: Request) {
+  const isAdmin = await checkIsAdmin();
+
+  if (isAdmin !== true) {
+    return isAdmin;
+  }
+
   const body = await request.json();
   const { description, credits, userId } = body;
 

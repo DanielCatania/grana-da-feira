@@ -1,7 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
+import checkIsAdmin from "@/utils/isAdmin";
 import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
 
 export async function POST(request: Request) {
+  const isAdmin = await checkIsAdmin();
+
+  if (isAdmin !== true) {
+    return isAdmin;
+  }
+
   const { id, description, amount } = (await request.json()) as {
     id: string;
     description: string;
