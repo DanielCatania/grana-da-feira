@@ -18,7 +18,8 @@ export async function POST(request: Request) {
   if (!id || !description || !amount) {
     return new Response(
       JSON.stringify({
-        error: "Faltam dados na requisição, é requerido: id, descrição e valor",
+        error:
+          "❌ Faltam dados na requisição, é requerido: id, descrição e valor",
       }),
       { status: 400 }
     );
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
   if (isNaN(amount) || amount < 0) {
     return new Response(
       JSON.stringify({
-        error: "Valor da transação é inválido!",
+        error: "❌ Valor da transação é inválido!",
       }),
       { status: 400 }
     );
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error:
-          "ID de Compra não encontrado! Por favor gere um ID de compra existente no seu dashboard!",
+          "❌ ID de Compra não encontrado! Por favor gere um ID de compra existente no seu dashboard!",
       }),
       { status: 404 }
     );
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error:
-          "O ID de Compra já foi usado! Por favor gere um novo ID de compra no seu dashboard!",
+          "❌ O ID de Compra já foi usado! Por favor gere um novo ID de compra no seu dashboard!",
       }),
       {
         status: 403,
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error:
-          "ID de Compra inválido! Este ID não é atrelado a nenhum usuário do sistema, por favor gere um ID de Compra válido em seu dashboard!",
+          "❌ ID de Compra inválido! Este ID não é atrelado a nenhum usuário do sistema, por favor gere um ID de Compra válido em seu dashboard!",
       }),
       { status: 404 }
     );
@@ -95,7 +96,7 @@ export async function POST(request: Request) {
   if (user.balance - amount < 0) {
     return new Response(
       JSON.stringify({
-        error: `O usuário não tem saldo suficiente para realizar essa transação - com apenas $${user.balance} cults de saldo, utilize outros métodos de pagamento`,
+        error: `❌ O usuário não tem saldo suficiente para realizar essa transação - com apenas $${user.balance} cults de saldo, utilize outros métodos de pagamento`,
       }),
       {
         status: 403,
@@ -122,7 +123,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error:
-          "Não foi possível concluir essa transação, se o erro persistir procure o suporte!",
+          "❌ Não foi possível concluir essa transação, se o erro persistir procure o suporte!",
       }),
       { status: 500 }
     );
@@ -149,7 +150,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error:
-          "Não foi possível concluir essa transação, se o erro persistir procure o suporte!",
+          "❌ Não foi possível concluir essa transação, se o erro persistir procure o suporte!",
       }),
       { status: 500 }
     );
@@ -157,8 +158,7 @@ export async function POST(request: Request) {
 
   return new Response(
     JSON.stringify({
-      message: `Venda de ${transaction.description} no valor de $${transaction.amount} cults para o ID de Compra ${id} realizada com sucesso!\n O usuário ${user.name} tem um saldo atualizado de ${updatedUser.balance} cults!
-    `,
+      message: `✅ Venda de *${transaction.description}* no valor de 💰 *$${transaction.amount} cults* para o ID de Compra 🆔 *${id}* realizada com sucesso!\n\n👤 Usuário: *${user.name}*\n💳 Saldo atualizado: *${updatedUser.balance} cults* 🎉`,
     })
   );
 }

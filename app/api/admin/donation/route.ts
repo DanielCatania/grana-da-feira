@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   if (!description || !credits || credits <= 0 || !userId) {
     return new Response(
       JSON.stringify({
-        error: "Por favor, preencha todos os campos corretamente.",
+        error: "❌ Por favor, preencha todos os campos corretamente.",
       }),
       {
         status: 400,
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     (Array.isArray(transactionData) && transactionData.length === 0)
   ) {
     return new Response(
-      JSON.stringify({ error: "Erro ao registrar a transação." }),
+      JSON.stringify({ error: "❌ Erro ao registrar a transação." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -55,10 +55,13 @@ export async function POST(request: Request) {
   if (currentUserError || !currentUser) {
     await supabase.from("Transaction").delete().eq("id", transactionData[0].id);
 
-    return new Response(JSON.stringify({ error: "Usuário não encontrado." }), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "❌ Usuário não encontrado." }),
+      {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
   const newCredits = (currentUser.balance || 0) + credits;
 
@@ -74,7 +77,7 @@ export async function POST(request: Request) {
     await supabase.from("Transaction").delete().eq("id", transactionData[0].id);
 
     return new Response(
-      JSON.stringify({ error: "Erro ao atualizar os créditos do usuário." }),
+      JSON.stringify({ error: "❌ Erro ao atualizar os créditos do usuário." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -84,7 +87,7 @@ export async function POST(request: Request) {
 
   return new Response(
     JSON.stringify({
-      message: `Doação de ${description} que gerou ${credits} cults registrada para o usuário ${updatedUser.name}`,
+      message: `🎁 Doação de *${description}* registrada com sucesso!\n✨ Gerou *${credits} cults* para o usuário 👤 *${updatedUser.name}*! 🎉`,
     }),
     {
       status: 200,
