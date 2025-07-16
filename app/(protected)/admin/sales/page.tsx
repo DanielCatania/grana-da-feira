@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import SalesForm from "./components/SalesForm";
 import Box from "@/components/Box";
 import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
+import { capitalize } from "@/utils/textFormatter";
 
 export default function SalesMode() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function SalesMode() {
   const [description, setDescription] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValid = validateId();
@@ -53,13 +54,32 @@ export default function SalesMode() {
       return;
     }
 
-    alert(
-      `Compra de ${description} no valor $${amount} cults com o ID de compra ${id}`
-    );
+    const response = await fetch("/api/admin/sale", {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+        description: capitalize(description),
+        amount,
+      }),
+    });
+
+    const data = (await response.json()) as {
+      message?: string;
+      error?: string;
+    };
+
+    if (data.error) {
+      setId("");
+      setQueryId(null);
+
+      return alert(data.error);
+    }
+
+    if (data.message) alert(data.message);
 
     setAmount(0);
-    setId("");
     setDescription("");
+    setId("");
 
     if (queryId) return router.push("/admin/sales");
   };
