@@ -35,12 +35,11 @@ export default function Donation() {
     });
 
     const data = await response.json();
-    if (!response.ok || !data.message || data.error) {
-      alert(`Erro ao registrar doação: ${data.error}`);
+    if (data.message) alert(data.message);
+    if (!response.ok || data.error) {
+      console.error("Erro ao registrar doação:", data.error);
       return;
     }
-
-    alert(data.message);
 
     setSelectedUser(null);
     setCredits(0);

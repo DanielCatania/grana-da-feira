@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import checkIsAdmin from "@/utils/isAdmin";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export async function POST(request: Request) {
   const isAdmin = await checkIsAdmin();
@@ -25,69 +26,27 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
 
-  const { data: transactionData, error: transactionError } = await supabase
-    .from("Transaction")
-    .insert([
-      { type: "DONATION", userid: userId, description, amount: credits },
-    ])
-    .select("*");
+  const { data, error } = (await supabase
+    .rpc("donate", {
+      uid: userId,
+      credits,
+      description,
+    })
+    .single()) as { data: { name: string }; error: PostgrestError | null };
 
-  if (
-    transactionError ||
-    !transactionData ||
-    (Array.isArray(transactionData) && transactionData.length === 0)
-  ) {
+  if (error) {
     return new Response(
-      JSON.stringify({ error: "❌ Erro ao registrar a transação." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-
-  const { data: currentUser, error: currentUserError } = await supabase
-    .from("User")
-    .select("balance")
-    .eq("id", userId)
-    .single();
-
-  if (currentUserError || !currentUser) {
-    await supabase.from("Transaction").delete().eq("id", transactionData[0].id);
-
-    return new Response(
-      JSON.stringify({ error: "❌ Usuário não encontrado." }),
-      {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-  const newCredits = (currentUser.balance || 0) + credits;
-
-  const { data: userData, error: userError } = await supabase
-    .from("User")
-    .update({ balance: newCredits })
-    .eq("id", userId)
-    .select();
-
-  const updatedUser = userData?.[0];
-
-  if (userError || !updatedUser) {
-    await supabase.from("Transaction").delete().eq("id", transactionData[0].id);
-
-    return new Response(
-      JSON.stringify({ error: "❌ Erro ao atualizar os créditos do usuário." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+      JSON.stringify({
+        message:
+          "❌ Não foi possível concluir a doação, se o erro persistir contate o suporte!",
+        error,
+      })
     );
   }
 
   return new Response(
     JSON.stringify({
-      message: `🎁 Doação de *${description}* registrada com sucesso!\n✨ Gerou *${credits} cults* para o usuário 👤 *${updatedUser.name}*! 🎉`,
+      message: `🎁 Doação de *${description}* registrada com sucesso!\n✨ Gerou *${credits} cults* para o usuário 👤 *${data.name}*! 🎉`,
     }),
     {
       status: 200,
