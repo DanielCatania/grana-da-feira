@@ -138,7 +138,7 @@ export async function POST(request: Request) {
 
   const { error: updateIdDataError } = await supabase
     .from("PurchaseId")
-    .update({ used: true })
+    .update({ used: true, transactionid: transaction.id })
     .eq("value", id);
 
   if (updateUserError || updateIdDataError) {
