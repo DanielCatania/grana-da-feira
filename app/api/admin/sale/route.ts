@@ -50,11 +50,13 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
 
-  const { data, error } = (await supabase.rpc("purchase", {
-    purchaseid: id,
-    amount,
-    description,
-  })) as {
+  const { data, error } = (await supabase
+    .rpc("purchase", {
+      purchaseid: id,
+      amount,
+      description,
+    })
+    .single()) as {
     data: {
       name: string;
       balance: number;
