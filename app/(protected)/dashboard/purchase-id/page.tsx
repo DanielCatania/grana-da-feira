@@ -6,52 +6,24 @@ import getUser from "@/utils/getUser";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const generatePurchaseId = () => {
-  const chars = "ABCDEFGHIJKMLNOPQRSTUVWXYZ0123456789";
-
-  let id = "";
-  for (let i = 0; i < 4; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  return id;
-};
-
 export default async function PurchaseIdPage() {
-  let id: string;
-
   const supabase = await createClient();
 
   const user = await getUser();
 
-  const { data: currentId } = (await supabase
-    .from("PurchaseId")
-    .select("*")
-    .eq("userid", user.id)
-    .eq("used", false)
-    .single()) as { data: { value: string } | null };
+  const { data, error } = await supabase.rpc("purchase_id", {
+    p_user: user.id,
+  });
 
-  if (currentId) id = currentId.value;
-  else {
-    const registerId = async (): Promise<string> => {
-      const id = generatePurchaseId();
-
-      const { error } = await supabase.from("PurchaseId").insert({
-        value: id,
-        userid: user.id,
-      });
-
-      if (error && error.code === "23505") return await registerId(); // 'duplicate key value violates unique constraint "PurchaseId_pkey"'
-
-      if (error) {
-        return redirect("/dashboard");
-      }
-
-      return id;
-    };
-
-    id = await registerId();
+  if (error) {
+    console.error(error);
+    alert(
+      "Erro ao gerar ID de compra. Se o problema persistir, entre em contato com o suporte."
+    );
+    return redirect("/dashboard");
   }
+
+  const id = data;
 
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
