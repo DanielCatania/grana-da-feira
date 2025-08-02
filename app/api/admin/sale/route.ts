@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import checkIsAdmin from "@/utils/isAdmin";
 import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export async function POST(request: Request) {
   const isAdmin = await checkIsAdmin();
@@ -49,108 +50,25 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
 
-  const { data: idData } = await supabase
-    .from("PurchaseId")
-    .select("userid, used")
-    .eq("value", id)
-    .single();
+  const { data, error } = (await supabase.rpc("purchase", {
+    purchaseid: id,
+    amount,
+    description,
+  })) as {
+    data: {
+      name: string;
+      balance: number;
+    };
+    error: PostgrestError | null;
+  };
 
-  if (!idData) {
+  if (error) {
+    console.error(error);
     return new Response(
       JSON.stringify({
-        error:
-          "❌ ID de Compra não encontrado! Por favor gere um ID de compra existente no seu dashboard!",
-      }),
-      { status: 404 }
-    );
-  }
-
-  if (idData.used) {
-    return new Response(
-      JSON.stringify({
-        error:
-          "❌ O ID de Compra já foi usado! Por favor gere um novo ID de compra no seu dashboard!",
-      }),
-      {
-        status: 403,
-      }
-    );
-  }
-
-  const { data: user } = await supabase
-    .from("User")
-    .select("id, balance, name")
-    .eq("id", idData.userid)
-    .single();
-
-  if (!user) {
-    return new Response(
-      JSON.stringify({
-        error:
-          "❌ ID de Compra inválido! Este ID não é atrelado a nenhum usuário do sistema, por favor gere um ID de Compra válido em seu dashboard!",
-      }),
-      { status: 404 }
-    );
-  }
-
-  if (user.balance - amount < 0) {
-    return new Response(
-      JSON.stringify({
-        error: `❌ O usuário não tem saldo suficiente para realizar essa transação - com apenas $${user.balance} cults de saldo, utilize outros métodos de pagamento`,
-      }),
-      {
-        status: 403,
-      }
-    );
-  }
-
-  const { data: transaction, error: transactionError } = await supabase
-    .from("Transaction")
-    .insert([
-      {
-        type: "PURCHASE",
-        userid: user.id,
-        description,
-        amount,
-      },
-    ])
-    .select("*")
-    .single();
-
-  if (!transaction || transactionError) {
-    console.error(transaction, transactionError);
-
-    return new Response(
-      JSON.stringify({
-        error:
+        message:
           "❌ Não foi possível concluir essa transação, se o erro persistir procure o suporte!",
-      }),
-      { status: 500 }
-    );
-  }
-
-  const { data: updatedUser, error: updateUserError } = await supabase
-    .from("User")
-    .update({ balance: user.balance - amount })
-    .eq("id", user.id)
-    .select("balance")
-    .single();
-
-  const { error: updateIdDataError } = await supabase
-    .from("PurchaseId")
-    .update({ used: true, transactionid: transaction.id })
-    .eq("value", id);
-
-  if (updateUserError || updateIdDataError) {
-    await supabase.from("Transaction").delete().eq("id", transaction.id);
-
-    console.error("[UPDATE USER]", updateUserError, updatedUser);
-    console.error("[UPDATE ID]", updateIdDataError);
-
-    return new Response(
-      JSON.stringify({
-        error:
-          "❌ Não foi possível concluir essa transação, se o erro persistir procure o suporte!",
+        error,
       }),
       { status: 500 }
     );
@@ -158,7 +76,7 @@ export async function POST(request: Request) {
 
   return new Response(
     JSON.stringify({
-      message: `✅ Venda de *${transaction.description}* no valor de 💰 *$${transaction.amount} cults* para o ID de Compra 🆔 *${id}* realizada com sucesso!\n\n👤 Usuário: *${user.name}*\n💳 Saldo atualizado: *${updatedUser.balance} cults* 🎉`,
+      message: `✅ Venda de *${description}* no valor de 💰 *$${amount} cults* para o ID de Compra 🆔 *${id}* realizada com sucesso!\n\n👤 Usuário: *${data.name}*\n💳 Saldo atualizado: *${data.balance} cults* 🎉`,
     })
   );
 }

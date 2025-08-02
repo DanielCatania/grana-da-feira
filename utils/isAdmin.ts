@@ -7,8 +7,6 @@ export default async function checkIsAdmin() {
   const cookiesList = await cookies();
   const token = cookiesList.get("token")?.value;
 
-  console.log(token);
-
   if (!token) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const decoded = jwt.verify(token) as DecodedAdminToken;

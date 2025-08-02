@@ -64,18 +64,19 @@ export default function SalesMode() {
     });
 
     const data = (await response.json()) as {
-      message?: string;
+      message: string;
       error?: string;
     };
+
+    alert(data.message);
 
     if (data.error) {
       setId("");
       setQueryId(null);
 
-      return alert(data.error);
+      console.error(data.error);
+      return;
     }
-
-    if (data.message) alert(data.message);
 
     setAmount(0);
     setDescription("");
