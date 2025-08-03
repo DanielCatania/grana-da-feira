@@ -55,6 +55,11 @@ export default function SalesMode() {
       return;
     }
 
+    if (description === "") {
+      alert("Por favor selecione um produto antes de efetuar a compra!");
+      return;
+    }
+
     const response = await safeFetch("/api/admin/sale", {
       method: "POST",
       body: JSON.stringify({

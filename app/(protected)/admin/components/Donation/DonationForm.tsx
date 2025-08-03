@@ -1,5 +1,6 @@
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import ProductSelection from "@/app/(protected)/admin/components/ProductSelection";
 
 interface DonationFormProps {
   description: {
@@ -21,12 +22,8 @@ export default function DonationForm({
       className="bg-dark text-primary-100 flex items-center justify-center p-4 rounded mt-4 flex-wrap"
     >
       <label className="text-xl mb-2 w-2/3">
-        Produto doado
-        <Input
-          type="text"
-          placeholder="Produto doado"
-          state={{ value: description.value, set: description.set }}
-        />
+        Produtos doados
+        <ProductSelection state={description} />
       </label>
       <label className="text-xl mb-2 w-1/3">
         Cults Ganhas

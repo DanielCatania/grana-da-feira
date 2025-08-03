@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import ProductSelection from "../../components/ProductSelection";
 
 interface SalesFormProps {
   children: React.ReactNode;
@@ -34,13 +35,8 @@ export default function SalesForm({
         {children}
       </Label>
       <Label>
-        Produto Comprado:
-        <Input<string>
-          type="text"
-          placeholder="Digite o nome do produto"
-          state={descriptionState}
-          required
-        />
+        Produtos Comprados:
+        <ProductSelection state={descriptionState} />
       </Label>
       <Label>
         Valor:
