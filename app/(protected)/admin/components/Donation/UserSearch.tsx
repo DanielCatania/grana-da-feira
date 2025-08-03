@@ -3,6 +3,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useState } from "react";
 import { IUserIdentification } from "@/types";
+import safeFetch from "@/utils/safeFetch";
 
 interface UserSearchProps {
   setSelectedUser: React.Dispatch<
@@ -28,7 +29,7 @@ export default function UserSearch({ setSelectedUser }: UserSearchProps) {
 
       setError("");
 
-      const res = await fetch(
+      const res = await safeFetch(
         `/api/admin/search?q=${encodeURIComponent(query)}`
       );
 

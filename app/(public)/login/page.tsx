@@ -6,6 +6,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { loginSchema } from "@/validation/loginSchema";
 import { useRouter } from "next/navigation";
+import safeFetch from "@/utils/safeFetch";
 
 export default function Login() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function Login() {
     }
 
     const response = await (
-      await fetch(`/api/login`, {
+      await safeFetch(`/api/login`, {
         body: JSON.stringify({
           email,
           password,

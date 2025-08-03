@@ -5,6 +5,7 @@ import DonationForm from "./DonationForm";
 import UserSearch from "./UserSearch";
 import { capitalize } from "@/utils/textFormatter";
 import { IUserIdentification } from "@/types";
+import safeFetch from "@/utils/safeFetch";
 
 export default function Donation() {
   const [selectedUser, setSelectedUser] = useState<IUserIdentification | null>(
@@ -22,7 +23,7 @@ export default function Donation() {
       return;
     }
 
-    const response = await fetch("/api/admin/donation", {
+    const response = await safeFetch("/api/admin/donation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

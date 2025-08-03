@@ -7,6 +7,7 @@ import SalesForm from "./components/SalesForm";
 import Box from "@/components/Box";
 import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
 import { capitalize } from "@/utils/textFormatter";
+import safeFetch from "@/utils/safeFetch";
 
 export default function SalesMode() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function SalesMode() {
       return;
     }
 
-    const response = await fetch("/api/admin/sale", {
+    const response = await safeFetch("/api/admin/sale", {
       method: "POST",
       body: JSON.stringify({
         id,

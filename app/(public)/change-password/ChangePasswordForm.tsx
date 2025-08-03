@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import safeFetch from "@/utils/safeFetch";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -26,7 +27,7 @@ export default function ChangePasswordForm({
       return setFormErrors("A senha deve ser diferente da senha padrão");
 
     const response = await (
-      await fetch(`/api/change-password`, {
+      await safeFetch(`/api/change-password`, {
         body: JSON.stringify({
           password,
         }),
