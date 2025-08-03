@@ -38,7 +38,7 @@ export async function middleware(req: NextRequest) {
       });
     }
 
-    return NextResponse.redirect(new URL(`/blocked?reason=${reason}`, req.url));
+    return NextResponse.redirect(new URL(`/blocked/${reason}`, req.url));
   }
 
   const requests = await redis.incr(reqCountKey);
@@ -62,9 +62,7 @@ export async function middleware(req: NextRequest) {
         );
       }
 
-      return NextResponse.redirect(
-        new URL("/blocked?reason=temporary", req.url)
-      );
+      return NextResponse.redirect(new URL("/blocked/temporary", req.url));
     } else {
       await redis.set(blockedUntilKey, PERMANENT_BLOCK);
 
@@ -75,9 +73,7 @@ export async function middleware(req: NextRequest) {
         );
       }
 
-      return NextResponse.redirect(
-        new URL("/blocked?reason=permanent", req.url)
-      );
+      return NextResponse.redirect(new URL("/blocked/permanent", req.url));
     }
   }
 

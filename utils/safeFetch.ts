@@ -4,7 +4,7 @@ export default async function safeFetch(
 ): Promise<Response> {
   const res = await fetch(input, init);
 
-  // blocked
+  // Blocked
   if (res.status === 429) {
     let reason = "temporary";
     try {
@@ -12,7 +12,7 @@ export default async function safeFetch(
       if (data.reason) reason = data.reason;
     } catch {}
 
-    window.location.href = `/blocked?reason=${reason}`;
+    window.location.href = `/blocked/${reason}`;
   }
 
   return res;
