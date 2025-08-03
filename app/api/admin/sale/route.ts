@@ -19,17 +19,19 @@ export async function POST(request: Request) {
   if (!id || !description || !amount) {
     return new Response(
       JSON.stringify({
-        error:
+        message:
           "❌ Faltam dados na requisição, é requerido: id, descrição e valor",
+        error: { id: !id, description: !description, amount: !amount },
       }),
       { status: 400 }
     );
   }
 
-  if (isNaN(amount) || amount < 0) {
+  if (isNaN(amount) || amount <= 0) {
     return new Response(
       JSON.stringify({
-        error: "❌ Valor da transação é inválido!",
+        message: "❌ Valor da transação é inválido!",
+        error: amount,
       }),
       { status: 400 }
     );
@@ -40,9 +42,10 @@ export async function POST(request: Request) {
   if (!idIsValid.success) {
     return new Response(
       JSON.stringify({
-        error: `Id de Compra Inválido:\n ${idIsValid.error.issues
+        message: `Id de Compra Inválido:\n ${idIsValid.error.issues
           .map((issue) => issue.message)
           .join("\n ")}`,
+        error: idIsValid,
       }),
       { status: 401 }
     );
