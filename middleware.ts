@@ -8,18 +8,12 @@ const redis = new Redis({
 });
 
 const WINDOW_SECONDS = 10;
-const MAX_REQUESTS = 5;
+const MAX_REQUESTS = 10;
 const TEMP_BLOCK_SECONDS = 2 * 60 * 60;
 const PERMANENT_BLOCK = -1;
 
 export async function middleware(req: NextRequest) {
   try {
-    console.log({
-      redisUrl: process.env.UPSTASH_REDIS_REST_URL,
-      redisToken: process.env.UPSTASH_REDIS_REST_TOKEN,
-      runtime: process.env.NODE_ENV,
-    });
-
     if (
       !process.env.UPSTASH_REDIS_REST_URL ||
       !process.env.UPSTASH_REDIS_REST_TOKEN
