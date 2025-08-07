@@ -8,6 +8,8 @@ import Box from "@/components/Box";
 import { purchaseIdSchema } from "@/validation/purchaseIdSchema";
 import { capitalize } from "@/utils/textFormatter";
 import safeFetch from "@/utils/safeFetch";
+import BackButton from "@/components/Button/BackButton";
+import Header from "@/components/Header";
 
 export default function SalesMode() {
   const router = useRouter();
@@ -92,13 +94,10 @@ export default function SalesMode() {
   };
 
   return (
-    <main className="w-2/5 min-w-72 flex mx-auto flex-col items-center justify-evenly h-screen">
-      <Link
-        href="/admin"
-        className="mt-4 bg-primary-100 bg-primary-200 text-white px-4 py-2 rounded absolute top-2 left-4 md:left-1/4"
-      >
-        Voltar
-      </Link>
+    <main className="w-2/5 min-w-72 flex mx-auto flex-col justify-center items-center h-screen">
+      <Header>
+        <BackButton href="/admin" />
+      </Header>
       <Box title="Modo de Venda">
         <SalesForm
           amountState={{ value: amount, set: setAmount }}

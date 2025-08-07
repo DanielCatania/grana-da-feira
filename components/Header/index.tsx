@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Header({ children }: { children?: React.ReactNode }) {
   return (
-    <header className="flex justify-between items-center text-xl w-full">
+    <header className="w-2/5 min-w-64 flex justify-between items-center text-xl">
       <Link href="/login" className="w-1/5 min-w-16">
         <Image
           src="/Icon.png"

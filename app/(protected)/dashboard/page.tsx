@@ -27,13 +27,12 @@ export default async function Dashboard() {
 
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
+      <Header>
+        <p>
+          Olá, <span className="text-primary-100 capitalize">{user.name}</span>
+        </p>
+      </Header>
       <main className="w-2/5 min-w-64 flex flex-col items-center">
-        <Header>
-          <p>
-            Olá,{" "}
-            <span className="text-primary-100 capitalize">{user.name}</span>
-          </p>
-        </Header>
         <Box title="Saldo">
           <h2 className="text-4xl text-primary-100 font-extrabold">
             ${user.balance}{" "}

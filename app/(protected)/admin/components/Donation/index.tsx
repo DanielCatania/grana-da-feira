@@ -6,6 +6,7 @@ import UserSearch from "./UserSearch";
 import { capitalize } from "@/utils/textFormatter";
 import { IUserIdentification } from "@/types";
 import safeFetch from "@/utils/safeFetch";
+import BackButton from "@/components/Button/BackButton";
 
 export default function Donation() {
   const [selectedUser, setSelectedUser] = useState<IUserIdentification | null>(
@@ -56,12 +57,7 @@ export default function Donation() {
             credits={{ value: credits, set: setCredits }}
             description={{ value: description, set: setDescription }}
           />
-          <button
-            className="mt-4 bg-primary-100 bg-primary-200 text-white px-4 py-2 rounded"
-            onClick={() => setSelectedUser(null)}
-          >
-            Voltar
-          </button>
+          <BackButton onClick={() => setSelectedUser(null)} />
         </Box>
       ) : (
         <Box title="Selecionar aluno para registrar doação">
