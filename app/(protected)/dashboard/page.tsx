@@ -1,12 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-import Image from "next/image";
 import Link from "next/link";
 
 import Box from "@/components/Box";
 import Button from "@/components/Button";
 
+import Header from "@/components/Header";
 import { capitalize } from "@/utils/textFormatter";
 import getUser from "@/utils/getUser";
 
@@ -28,20 +28,12 @@ export default async function Dashboard() {
   return (
     <div className="w-full min-h-screen flex-col flex items-center justify-center">
       <main className="w-2/5 min-w-64 flex flex-col items-center">
-        <section className="flex justify-between items-center text-xl w-full">
-          <Image
-            src="/Icon.png"
-            alt="Ícone de notas de dinheiro voando."
-            width={480}
-            height={480}
-            className="w-1/5 min-w-16"
-          />
+        <Header>
           <p>
             Olá,{" "}
             <span className="text-primary-100 capitalize">{user.name}</span>
           </p>
-        </section>
-
+        </Header>
         <Box title="Saldo">
           <h2 className="text-4xl text-primary-100 font-extrabold">
             ${user.balance}{" "}
