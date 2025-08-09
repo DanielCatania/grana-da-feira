@@ -15,8 +15,9 @@ export default function SalesMode() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const [queryId, setQueryId] = useState(searchParams.get("id"));
-  const [id, setId] = useState<string>(queryId || "");
+  const queryId = searchParams.get("id");
+  const [hasQueryId, setHasQueryId] = useState(queryId !== null);
+  const [id, setId] = useState<string>(hasQueryId ? queryId! : "");
 
   const validateId = useCallback(() => {
     const validationId = purchaseIdSchema.safeParse(id);
@@ -33,15 +34,21 @@ export default function SalesMode() {
     }
 
     return true;
-  }, [id]);
+  }, [id, searchParams]);
 
   useEffect(() => {
-    if (queryId) {
+    const queryId = searchParams.get("id");
+    setHasQueryId(queryId !== null);
+    setId(queryId ?? "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (hasQueryId) {
       const isValid = validateId();
 
-      if (!isValid) setQueryId(null);
+      if (!isValid) setHasQueryId(false);
     }
-  }, [queryId, validateId]);
+  }, [hasQueryId, validateId]);
 
   const [description, setDescription] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
@@ -52,13 +59,18 @@ export default function SalesMode() {
     const isValid = validateId();
 
     if (!isValid) {
-      setQueryId(null);
+      setHasQueryId(false);
 
       return;
     }
 
     if (description === "") {
       alert("Por favor selecione um produto antes de efetuar a compra!");
+      return;
+    }
+
+    if (amount <= 0) {
+      alert("Por favor informe um valor maior que zero!");
       return;
     }
 
@@ -80,7 +92,7 @@ export default function SalesMode() {
 
     if (data.error) {
       setId("");
-      setQueryId(null);
+      setHasQueryId(false);
 
       console.error(data.error);
       return;
@@ -88,9 +100,10 @@ export default function SalesMode() {
 
     setAmount(0);
     setDescription("");
+    setHasQueryId(false);
     setId("");
 
-    if (queryId) return router.push("/admin/sales");
+    if (hasQueryId) return router.push("/admin/sales");
   };
 
   return (
@@ -104,7 +117,7 @@ export default function SalesMode() {
           descriptionState={{ value: description, set: setDescription }}
           onSubmit={handleSubmit}
         >
-          {!queryId ? (
+          {!hasQueryId ? (
             <>
               <Input<string>
                 type="text"
