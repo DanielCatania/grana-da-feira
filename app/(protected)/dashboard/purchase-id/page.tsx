@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import QRCodeGenerator from "@/components/QRCode/QRCodeGenerator";
 import { createClient } from "@/lib/supabase/server";
 import getUser from "@/utils/getUser";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function PurchaseIdPage() {

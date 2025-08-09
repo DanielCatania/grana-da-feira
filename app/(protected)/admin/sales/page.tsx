@@ -34,7 +34,7 @@ export default function SalesMode() {
     }
 
     return true;
-  }, [id, searchParams]);
+  }, [id]);
 
   useEffect(() => {
     const queryId = searchParams.get("id");
