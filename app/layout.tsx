@@ -24,7 +24,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex justify-center items-center backdrop-blur-md text-xs mb-2">
+          <div className="flex justify-center items-center backdrop-blur-md text-xs mb-2 fixed top-0 left-0 right-0 z-50">
             <p>
               Desenvolvido por{" "}
               <Link
@@ -37,7 +37,11 @@ export default function RootLayout({
               - 2025
             </p>
           </div>
-          {children}
+          <div className="bg-geometric flex items-center justify-center">
+            <div className="flex-col flex items-center justify-center w-2/5 min-w-64">
+              {children}
+            </div>
+          </div>
         </ThemeProvider>
       </body>
     </html>

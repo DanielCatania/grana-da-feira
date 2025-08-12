@@ -27,11 +27,11 @@ export default async function PurchaseIdPage() {
   const id = data;
 
   return (
-    <div className="w-full min-h-[115vh] flex-col flex items-center justify-center">
+    <>
       <Header>
         <BackButton href="/dashboard" />
       </Header>
-      <main className="w-2/5 h-4/5 min-w-64 flex flex-col items-center">
+      <main className="h-4/5 w-full flex flex-col items-center">
         <Box title="O que é ID de compra">
           <p className="text-primary-100 text-justify font-bold">
             <span className="font-extrabold text-primary-150">
@@ -54,6 +54,6 @@ export default async function PurchaseIdPage() {
         </Box>
         <RefreshButton>Gerar Outro ID de Compra</RefreshButton>
       </main>
-    </div>
+    </>
   );
 }

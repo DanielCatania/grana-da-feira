@@ -9,7 +9,7 @@ export default function QRCodePage() {
   const router = useRouter();
   return (
     <>
-      <div className="h-screen w-screen flex flex-col items-center justify-center">
+      <>
         <Header>
           <BackButton href="/admin/sales" />
         </Header>
@@ -30,7 +30,7 @@ export default function QRCodePage() {
             return true;
           }}
         />
-      </div>
+      </>
     </>
   );
 }

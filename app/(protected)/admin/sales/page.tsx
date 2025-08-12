@@ -107,7 +107,7 @@ export default function SalesMode() {
   };
 
   return (
-    <main className="w-2/5 min-w-72 flex mx-auto flex-col justify-center items-center h-screen">
+    <>
       <Header>
         <BackButton href="/admin" />
       </Header>
@@ -152,6 +152,6 @@ export default function SalesMode() {
           )}
         </SalesForm>
       </Box>
-    </main>
+    </>
   );
 }
