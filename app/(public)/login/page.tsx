@@ -57,11 +57,12 @@ export default function Login() {
       <div className="overlay flex-col flex items-center justify-center">
         <main className="w-2/5 min-w-60">
           <Image
-            src="/logo.png"
+            src="https://cdn.jsdelivr.net/gh/DanielCatania/assets/granda-da-feira_logo.png"
             width={500}
             height={200}
             alt="Ícone de notas de dinheiro com asas ao lado escrito Grana da Feira em verde com letras quadradas."
             className="w-full"
+            unoptimized
           />
           <h1 className="sr-only">Área de Login</h1>
           <form
