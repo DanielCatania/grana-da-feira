@@ -14,22 +14,28 @@ async function runSeed() {
     delimiter: ",",
   });
 
+  const passwordDefault = process.env.DEFAULT_PASSWORD;
+  if (!passwordDefault)
+    throw new Error("The DEFAULT_PASSWORD env is required!");
+
   for (const row of records) {
     const name = row["Nome Completo"];
-    const birth = row["Data de Nascimento"]; // ex: 15/09/2006"
+    // const birth = row["Data de Nascimento"];
     const email = row["Email"];
 
-    const [day, month, year] = birth.split("/");
-    const passwordRaw = `${day}${month}${year}`; // ex: "15092006"
-    const hashedPassword = await hashPassword(passwordRaw, name);
+    // const [day, month, year] = birth.split("/");
+    // const passwordRaw = `${day}${month}${year}`; // ex: "15092006"
+    // const hashedPassword = await hashPassword(passwordRaw, name);
 
-    const birthDateISO = new Date(`${year}-${month}-${day}T00:00:00`);
+    // const birthDateISO = new Date(`${year}-${month}-${day}T00:00:00`);
+
+    const hashedPassword = await hashPassword(passwordDefault, name);
 
     const { error } = await admin.from("User").insert({
       name,
       email,
       password: hashedPassword,
-      birthdate: birthDateISO.toISOString(),
+      // birthdate: birthDateISO.toISOString(),
       passworddefault: true,
       balance: 0,
     });
