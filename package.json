@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed-user": "tsx scripts/seedUsersCSV.ts"
+    "seed-user": "tsx scripts/seedUsersCSV.ts",
+    "reset-password": "tsx scripts/resetPassword.ts"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.1",
