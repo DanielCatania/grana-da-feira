@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { IUser, IUserToken } from "@/types";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
-import { formatDateToPassword, hashPassword } from "@/utils/password";
+import { hashPassword } from "@/utils/password";
 import bcrypt from "bcrypt";
 
 export async function PATCH(request: Request) {
@@ -36,7 +36,9 @@ export async function PATCH(request: Request) {
 
   const user = data[0] as IUser;
 
-  if (formatDateToPassword(user.birthdate) === password)
+  const passwordDefault = process.env.DEFAULT_PASSWORD;
+
+  if (passwordDefault && passwordDefault === password)
     return new Response(
       JSON.stringify({
         error: "A nova senha não pode ser igual a senha padrão.",
@@ -75,7 +77,6 @@ export async function PATCH(request: Request) {
       id: updatedUser.id,
       name: updatedUser.name,
       passwordDefault: updatedUser.passworddefault,
-      birthdate: formatDateToPassword(updatedUser.birthdate),
     },
     { expiresIn: "2d" }
   );

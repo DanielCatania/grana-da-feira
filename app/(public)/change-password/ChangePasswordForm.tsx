@@ -5,13 +5,7 @@ import safeFetch from "@/utils/safeFetch";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface ChangePasswordFormProps {
-  passwordDefault: string;
-}
-
-export default function ChangePasswordForm({
-  passwordDefault,
-}: ChangePasswordFormProps) {
+export default function ChangePasswordForm() {
   const router = useRouter();
 
   const [formErrors, setFormErrors] = useState("");
@@ -23,7 +17,9 @@ export default function ChangePasswordForm({
     if (password.length < 8)
       return setFormErrors("A senha deve ter no mínimo 8 caracteres");
 
-    if (password === passwordDefault)
+    const passwordDefault = process.env.DEFAULT_PASSWORD;
+
+    if (passwordDefault && password === passwordDefault)
       return setFormErrors("A senha deve ser diferente da senha padrão");
 
     const response = await (

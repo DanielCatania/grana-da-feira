@@ -3,7 +3,6 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  birthdate: string;
   passworddefault: boolean;
   balance: number;
 }
@@ -19,7 +18,6 @@ export interface IUserToken {
   exp: number;
   iat: number;
   passwordDefault: boolean;
-  birthdate: string;
   adminAccess?: string;
 }
 

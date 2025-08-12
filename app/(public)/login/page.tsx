@@ -79,7 +79,7 @@ export default function Login() {
           aria-describedby="emailDesc"
         />
         <p id="emailDesc" className="text-xs text-neutral">
-          Seu e-mail institucional é aquele fornecido pelo cólegio.
+          Seu e-mail institucional é aquele fornecido pelo colégio.
         </p>
         <label htmlFor="password" className="sr-only">
           Digite sua senha
@@ -93,8 +93,7 @@ export default function Login() {
           aria-describedby="passwordDesc"
         />
         <p id="passwordDesc" className="text-xs text-neutral text-center">
-          Sua senha no primeiro acesso será sua data de aniversário neste
-          formato DDMMYYYY.
+          Sua senha no primeiro acesso será aquela fornecida pelo colégio.
         </p>
         <p className="text-xs font-extrabold text-secondary-150">
           {formErrors}

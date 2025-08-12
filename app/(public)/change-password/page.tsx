@@ -17,7 +17,7 @@ export default async function ChangePassword() {
       redirect("/admin");
     }
 
-    return <ChangePasswordForm passwordDefault={decoded.birthdate} />;
+    return <ChangePasswordForm />;
   } catch (error) {
     const msg = (error as Error).message;
     if (msg === "No Token") redirect("/login");

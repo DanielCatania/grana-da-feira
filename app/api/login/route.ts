@@ -4,7 +4,7 @@ import { IUser } from "@/types";
 import { loginSchema } from "@/validation/loginSchema";
 import { cookies } from "next/headers";
 import jwt from "@/lib/jwt";
-import { formatDateToPassword, hashPassword } from "@/utils/password";
+import { hashPassword } from "@/utils/password";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -93,7 +93,6 @@ export async function POST(request: Request) {
       id: user.id,
       name: user.name,
       passwordDefault: user.passworddefault,
-      birthdate: formatDateToPassword(user.birthdate),
     },
     { expiresIn: "2d" }
   );
