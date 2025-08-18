@@ -1,10 +1,11 @@
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import { parse } from "csv-parse/sync";
 import { admin } from "@/lib/supabase/admin";
 import { hashPassword } from "@/utils/password";
 
-async function runSeed() {
+export async function runSeed() {
   const csvPath = path.join(process.cwd(), "scripts", "alunos.csv");
   const file = fs.readFileSync(csvPath);
 
@@ -15,40 +16,64 @@ async function runSeed() {
   });
 
   const passwordDefault = process.env.DEFAULT_PASSWORD;
-  if (!passwordDefault)
+  if (!passwordDefault) {
     throw new Error("The DEFAULT_PASSWORD env is required!");
+  }
 
-  for (const row of records) {
-    const name = row["Nome Completo"];
-    // const birth = row["Data de Nascimento"];
-    const email = row["Email"];
+  const users = await Promise.all(
+    records.map(async (row: { "Nome Completo": string; Email: string }) => {
+      const name = row["Nome Completo"];
+      const email = row["Email"];
 
-    // const [day, month, year] = birth.split("/");
-    // const passwordRaw = `${day}${month}${year}`; // ex: "15092006"
-    // const hashedPassword = await hashPassword(passwordRaw, name);
+      const hashedPassword = await hashPassword(passwordDefault, name);
 
-    // const birthDateISO = new Date(`${year}-${month}-${day}T00:00:00`);
+      return {
+        name,
+        email,
+        password: hashedPassword,
+        passworddefault: true,
+        balance: 0,
+      };
+    })
+  );
 
-    const hashedPassword = await hashPassword(passwordDefault, name);
+  const batchSize = 100;
+  for (let i = 0; i < users.length; i += batchSize) {
+    const chunk = users.slice(i, i + batchSize);
 
-    const { error } = await admin.from("User").insert({
-      name,
-      email,
-      password: hashedPassword,
-      // birthdate: birthDateISO.toISOString(),
-      passworddefault: true,
-      balance: 0,
-    });
+    const { error } = await admin
+      .from("User")
+      .upsert(chunk, { onConflict: "email" });
 
     if (error) {
-      console.error(`Error inserting user with email ${email}:`, error.message);
+      console.error(
+        `❌ Erro ao inserir batch ${i / batchSize + 1}:`,
+        error.message
+      );
     } else {
-      console.log(`✅ User ${email} inserted successfully.`);
+      console.log(`✅ Batch ${i / batchSize + 1} inserido com sucesso.`);
     }
   }
 }
 
-runSeed()
-  .then(() => console.log("Seed ok."))
-  .catch((error) => console.error("Error in seed:", error))
+// runSeed()
+//   .then(() => console.log("🌱 Seed finalizada com sucesso."))
+//   .catch((error) => console.error("❌ Erro na seed:", error))
+//   .finally(() => process.exit(0));
+
+export const getAllUsers = async () => {
+  const { data, error } = await admin.from("User").select("*");
+
+  if (error) {
+    console.error("❌ Erro ao buscar usuários:", error.message);
+    return;
+  }
+
+  console.log("Número total de usuários:", data?.length);
+  return data;
+};
+
+getAllUsers()
+  .then(() => console.log("🌱 Operação finalizada com sucesso."))
+  .catch((error) => console.error("❌ Erro na operação:", error))
   .finally(() => process.exit(0));
