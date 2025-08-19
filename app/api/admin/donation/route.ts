@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
   return new Response(
     JSON.stringify({
-      message: `🎁 Doação de *${description}* registrada com sucesso!\n✨ Gerou *${credits} cults* para o usuário 👤 *${data.name}*! 🎉`,
+      message: `🎁 Doação de *${description}* registrada com sucesso!\n✨ Gerou *${credits} Créditos* para o usuário 👤 *${data.name}*! 🎉`,
     }),
     {
       status: 200,

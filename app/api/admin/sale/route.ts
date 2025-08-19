@@ -81,7 +81,7 @@ export async function POST(request: Request) {
 
   return new Response(
     JSON.stringify({
-      message: `✅ Venda de *${description}* no valor de 💰 *$${amount} cults* para o ID de Compra 🆔 *${id}* realizada com sucesso!\n\n👤 Usuário: *${data.name}*\n💳 Saldo atualizado: *${data.balance} cults* 🎉`,
+      message: `✅ Venda de *${description}* no valor de 💰 *$${amount} Créditos* para o ID de Compra 🆔 *${id}* realizada com sucesso!\n\n👤 Usuário: *${data.name}*\n💳 Saldo atualizado: *${data.balance} Créditos* 🎉`,
     })
   );
 }

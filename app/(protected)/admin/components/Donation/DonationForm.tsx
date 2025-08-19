@@ -26,7 +26,7 @@ export default function DonationForm({
         <ProductSelection state={description} />
       </label>
       <label className="text-xl mb-2 w-1/3">
-        Cults Ganhas
+        Créditos Ganhos
         <Input
           type="number"
           placeholder="0"

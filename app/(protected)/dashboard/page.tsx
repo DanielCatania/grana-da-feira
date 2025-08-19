@@ -36,7 +36,7 @@ export default async function Dashboard() {
         <Box title="Saldo">
           <h2 className="text-4xl text-primary-100 font-extrabold">
             ${user.balance}{" "}
-            <span className="text-2xl text-primary-150">Cults</span>
+            <span className="text-2xl text-primary-150">Créditos</span>
           </h2>
         </Box>
         <Box title="Extrato">
@@ -64,7 +64,7 @@ export default async function Dashboard() {
                   </h3>
                   <p>
                     {isDonation ? "+" : "-"}
-                    {transaction.amount} Cults -{" "}
+                    {transaction.amount} Créditos -{" "}
                     {capitalize(transaction.description)} em{" "}
                     {formatDate(transaction.date)}
                   </p>
