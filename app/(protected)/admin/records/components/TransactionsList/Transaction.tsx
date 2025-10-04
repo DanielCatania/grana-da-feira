@@ -1,16 +1,5 @@
 import { capitalize } from "@/utils/textFormatter";
-
-export type transactionContent = {
-  id: string;
-  type: "DONATION" | "PURCHASE";
-  description: string;
-  date: string;
-  amount: number;
-  user: {
-    id: string;
-    name: string;
-  };
-};
+import { transactionContent } from "./type";
 
 interface ITransactionProps {
   content: transactionContent;
