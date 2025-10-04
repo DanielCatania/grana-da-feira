@@ -1,6 +1,5 @@
 "use client";
 import Button from "@/components/Button";
-import Input from "@/components/Input";
 import PasswordInput from "@/components/Input/Password";
 import safeFetch from "@/utils/safeFetch";
 import { useRouter } from "next/navigation";
