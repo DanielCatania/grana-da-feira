@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import { loginSchema } from "@/validation/loginSchema";
 import { useRouter } from "next/navigation";
 import safeFetch from "@/utils/safeFetch";
+import PasswordInput from "@/components/Input/Password";
 
 export default function Login() {
   const router = useRouter();
@@ -81,20 +82,10 @@ export default function Login() {
         <p id="emailDesc" className="text-xs text-neutral">
           Seu e-mail institucional é aquele fornecido pelo colégio.
         </p>
-        <label htmlFor="password" className="sr-only">
-          Digite sua senha
-        </label>
-        <Input
-          type="password"
-          placeholder="Senha"
-          id="password"
-          required
+        <PasswordInput
+          desc="Sua senha no primeiro acesso será aquela fornecida pelo colégio."
           state={{ value: password, set: setPassword }}
-          aria-describedby="passwordDesc"
         />
-        <p id="passwordDesc" className="text-xs text-neutral text-center">
-          Sua senha no primeiro acesso será aquela fornecida pelo colégio.
-        </p>
         <p className="text-xs font-extrabold text-secondary-150">
           {formErrors}
         </p>

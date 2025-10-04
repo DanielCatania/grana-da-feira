@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import PasswordInput from "@/components/Input/Password";
 import safeFetch from "@/utils/safeFetch";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -49,20 +50,10 @@ export default function ChangePasswordForm() {
         className="flex flex-col items-center gap-2"
         onSubmit={handleSubmit}
       >
-        <label htmlFor="password" className="sr-only">
-          Digite sua senha
-        </label>
-        <Input
-          type="password"
-          placeholder="Nova senha"
-          id="password"
-          required
+        <PasswordInput
+          desc="Sua senha deve ser diferente de sua senha padrão."
           state={{ value: password, set: setPassword }}
-          aria-describedby="passwordDesc"
         />
-        <p id="passwordDesc" className="text-xs text-neutral text-center">
-          Sua senha deve ser diferente de sua senha padrão.
-        </p>
         <p className="text-xs font-extrabold text-secondary-150">
           {formErrors}
         </p>

@@ -1,4 +1,4 @@
-type InputProps<T extends string | number> = Omit<
+export type InputProps<T extends string | number> = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "value"
 > & {
