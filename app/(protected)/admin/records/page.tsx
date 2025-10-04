@@ -11,28 +11,38 @@ import { transactionContent } from "./components/TransactionsList/type";
 export default async function Records() {
   const supabase = await createClient();
 
-  const { data: transactions, error: transactionError } = (await supabase
-    .from("Transaction")
-    .select(
-      `
-    *,
-    user:User(id, name)
-  `
-    )
-    .order("date", { ascending: false })) as {
-    data: transactionContent[];
-    error: PostgrestError | null;
-  };
+  const [transactionsResponse, purchaseCountResponse, usersCountResponse] =
+    await Promise.all([
+      supabase
+        .from("Transaction")
+        .select(
+          `
+          *,
+          user:User(id, name)
+        `
+        )
+        .order("date", { ascending: false }),
 
-  const { count: purchaseIdsCount, error: purchaseError } = await supabase
-    .from("PurchaseId")
-    .select("*", { count: "exact", head: true });
+      supabase
+        .from("PurchaseId")
+        .select("value", { count: "exact", head: true }),
 
+      supabase
+        .from("User")
+        .select("id", { count: "exact", head: true })
+        .eq("passworddefault", false),
+    ]);
+
+  const { data: transactions, error: transactionError } =
+    transactionsResponse as {
+      data: transactionContent[];
+      error: PostgrestError | null;
+    };
+
+  const { count: purchaseIdsCount, error: purchaseError } =
+    purchaseCountResponse;
   const { count: initialAccessUsersCount, error: usersCountError } =
-    await supabase
-      .from("User")
-      .select("*", { count: "exact", head: true })
-      .eq("passworddefault", false);
+    usersCountResponse;
 
   if (transactionError || usersCountError || purchaseError) {
     console.error(
@@ -44,12 +54,10 @@ export default async function Records() {
     redirect("/admin");
   }
 
-  const donations = transactions.filter(
-    (transaction) => transaction.type === "DONATION"
-  );
-  const purchases = transactions.filter(
-    (transaction) => transaction.type === "PURCHASE"
-  );
+  const donations =
+    transactions.filter((transaction) => transaction.type === "DONATION") ?? [];
+  const purchases =
+    transactions.filter((transaction) => transaction.type === "PURCHASE") ?? [];
 
   return (
     <>

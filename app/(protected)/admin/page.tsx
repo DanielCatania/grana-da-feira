@@ -11,7 +11,7 @@ export default function Admin() {
       </Header>
       <Button>
         <Link href="/admin/records" className="block w-full h-full">
-          Visualizar Registros
+          Visualizar Recordes
         </Link>
       </Button>
       <Donation />
