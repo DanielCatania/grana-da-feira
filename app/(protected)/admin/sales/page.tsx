@@ -79,7 +79,7 @@ export default function SalesMode() {
       body: JSON.stringify({
         id,
         description: capitalize(description),
-        amount,
+        amount: amount * 2,
       }),
     });
 

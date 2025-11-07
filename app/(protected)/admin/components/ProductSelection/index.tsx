@@ -14,6 +14,7 @@ export default function ProductSelection({
     { name: "Brinquedos", id: 1 },
     { name: "Livros", id: 2 },
     { name: "Itens do Bazar", id: 3 },
+    { name: "Diversos", id: 4 },
   ];
 
   return (

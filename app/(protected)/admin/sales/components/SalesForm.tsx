@@ -39,7 +39,7 @@ export default function SalesForm({
         <ProductSelection state={descriptionState} />
       </Label>
       <Label>
-        Valor:
+        Valor (Real):
         <Input<number>
           type="number"
           min={1}
